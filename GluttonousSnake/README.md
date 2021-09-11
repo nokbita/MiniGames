@@ -3,7 +3,7 @@
 网页版的简易实现
 
 ## 运行截图：
-![运行截图](132946659-7724e19f-5904-4140-a90a-988b2b5cea5c.png)
+![运行截图](https://user-images.githubusercontent.com/47719299/132947904-c5cb004a-2443-405e-953e-c8aedd18b521.png)
 
 ## 项目配置
 - 语言 TypeScript、HTML、Less
