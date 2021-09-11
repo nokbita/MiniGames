@@ -1,10 +1,3 @@
-let stage: HTMLDivElement = document.querySelector("#stage");
-let cols: HTMLCollectionOf<Element> = document.getElementsByClassName("col");
-let mask: HTMLDivElement = document.querySelector("#mask");
-let message: HTMLDivElement = document.querySelector("#message");
-let winner: HTMLDivElement = message.querySelector("#winner");
-let restart: HTMLDivElement = document.querySelector("#restart");
-
 enum Player {
     X = "x",
     O = "o"
@@ -21,83 +14,75 @@ let odds: number[][] = [
     [2, 4, 6]
 ]
 
-let currentPlayer: Player = Player.X;
-let end: boolean = false;
-let victor: Player;
+let stage: HTMLDivElement = document.querySelector("#stage");
+let cols: NodeListOf<Element> = document.querySelectorAll(".col");
+let tipPanel: HTMLDivElement = document.querySelector("#tip-panel");
+let winner: HTMLDivElement = tipPanel.querySelector("#tip-panel > p");
+let restart: HTMLDivElement = document.querySelector("#tip-panel > button");
 
-for (let index: number = 0; index < cols.length; index++) {
-    (<HTMLDivElement>cols.item(index))
-    .addEventListener("click", clickColHandler, { once: true });
+let currentPlayer: Player;
+let steps: number;
+
+init();
+restart.onclick = init;
+
+function init(): void {
+    tipPanel.style.display = "none";
+    stage.classList.remove(Player.X, Player.O);
+    steps = 0;
+
+    currentPlayer = Player.X;
+    stage.classList.add(currentPlayer);
+
+    cols.forEach(function (item: Element): void {
+        let col: HTMLDivElement = item as HTMLDivElement;
+        col.classList.remove(Player.X, Player.O);
+
+        col.removeEventListener("click", clickColHandler);
+        col.addEventListener("click", clickColHandler, { once: true });
+    });
 }
 
 function clickColHandler(event: MouseEvent): void {
     let col: HTMLDivElement = event.target as HTMLDivElement;
+    col.classList.add(currentPlayer);
+    steps++;
+
+    let isWin: boolean = checkWin(currentPlayer);
+    if (isWin) {
+        showTipPanel(currentPlayer);
+        return;
+    }
+    if (steps >= 9) {
+        showTipPanel(null);
+        return;
+    }
 
     stage.classList.remove(currentPlayer);
-    col.classList.add(currentPlayer);
-
-    let isWinner: boolean = checkWinner(currentPlayer);
-    if (isWinner) {
-        showMessage(currentPlayer);
-        return;
-    }
-    let isEnd: boolean = checkEnd();
-    if (isEnd) {
-        showMessage(null);
-        return;
-    }
-
     currentPlayer = currentPlayer === Player.X ? Player.O : Player.X;
     stage.classList.add(currentPlayer);
 }
 
-function checkWinner(currentPlayer: Player): boolean {
-    let isVictory: boolean = false;
-
-    debugger;
-    odds.some(function (items: number[]): boolean {
-        let isFailture: boolean = false;
-        items.some(function (index: number): boolean {
+function checkWin(currentPlayer: Player): boolean {
+    return odds.some(function (items: number[]): boolean {
+        let notWin: boolean = items.some(function (index: number): boolean {
             let col: HTMLDivElement = cols[index] as HTMLDivElement;
             if (!col.classList.contains(currentPlayer)) {
-                isFailture = true;
                 return true;
             }
         });
-        if (!isFailture) {
-            isVictory = true;
+
+        if (!notWin) {
             return true;
         }
     });
-
-    return isVictory;
 }
 
-function showMessage(currentPlayer: Player): void {
+function showTipPanel(currentPlayer: Player): void {
     if (currentPlayer === null) {
-        winner.innerText = "平局 ！";
+        winner.innerText = "平局!";
     } else {
-        winner.innerText = currentPlayer.toLocaleUpperCase() + " 获胜 ！";
+        winner.innerText = currentPlayer.toLocaleUpperCase() + " 获胜!";
     }
-    mask.style.display = "block";
-    message.style.display = "block";
+    tipPanel.style.display = "block";
 }
-
-function checkEnd(): boolean {
-    let isEnd: boolean = true;
-    for (let index: number = 0; index < cols.length; index++) {
-        const element: HTMLDivElement = cols[index] as HTMLDivElement;
-        if(!element.classList.contains(Player.X) && !element.classList.contains(Player.O)) {
-            isEnd = false;
-            break;
-        }
-    }
-
-    return isEnd;
-}
-
-
-restart.onclick = function (): void {
-    location.reload();
-}
-

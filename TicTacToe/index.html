@@ -3,17 +3,17 @@
 
 <head>
     <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <meta name="author" content="nokbita">
+    <meta name="version" content="v0.0.2">
+
+    <title>Tic Tac Toe 井字棋</title>
     <link rel="stylesheet" href="index.css">
 </head>
 
 <body>
     <div id="container">
         <h1>Tic Tac Toe</h1>
-        <div id="mask"></div>
-        <div id="stage" class="x">
+        <div id="stage">
             <div class="col"></div>
             <div class="col"></div>
             <div class="col"></div>
@@ -24,9 +24,9 @@
             <div class="col"></div>
             <div class="col"></div>
         </div>
-        <div id="message">
-            <p id="winner">x 赢了！</p>
-            <button id="restart">重新开始</button>
+        <div id="tip-panel">
+            <p>x 赢了!</p>
+            <button>重新开始</button>
         </div>
     </div>
 
