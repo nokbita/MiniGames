@@ -9,4 +9,4 @@
 TypeScript、HTML、CSS
 
 ## 编程思想
-函数式编程
+面向过程
